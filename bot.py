@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from telethon import TelegramClient
+from telethon.sessions import StringSession
 from telethon.errors import FloodWaitError
 import sys
 import signal
@@ -22,14 +23,13 @@ client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
 async def main():
     await client.start()
-    logger.info("Bot started successfully!")
+    logger.info("✅ Bot started successfully!")
     
     setup_handlers(client, FROM_CHATS, TO_CHATS, BLOCKED_TEXTS, MEDIA_FORWARD, FORWARD_EDIT, DELAY)
     
     await client.run_until_disconnected()
 
 if __name__ == "__main__":
-    # Graceful shutdown
     loop = asyncio.get_event_loop()
     for sig in (signal.SIGTERM, signal.SIGINT):
         loop.add_signal_handler(sig, lambda: asyncio.create_task(client.disconnect()))
